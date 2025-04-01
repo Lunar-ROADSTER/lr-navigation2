@@ -27,14 +27,12 @@ if(BUILD_TESTING)
 endif()
 
 
+add_executable(autonomy_command scripts/autonomy_command.cpp)
+ament_target_dependencies(autonomy_command rclcpp geometry_msgs cg_msgs)
+
 install(TARGETS
   autonomy_command
   DESTINATION lib/${PROJECT_NAME}
 )
-
-
-add_executable(autonomy_command scripts/autonomy_command.cpp)
-ament_target_dependencies(autonomy_command rclcpp geometry_msgs cg_msgs)
-
 
 ament_package()
