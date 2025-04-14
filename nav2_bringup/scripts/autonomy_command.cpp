@@ -27,7 +27,7 @@ private:
 
         // Convert angular velocity to steer position
         actuator_msg.steer_position = -(msg->angular.z / max_steering_angle) * 100.0;
-        actuator_msg.steer_position = std::clamp(actuator_msg.steer_position, -100.0, 100.0);
+        actuator_msg.steer_position = std::clamp(actuator_msg.steer_position, -90.0, 90.0);
 
         // Include the latest tool height (assumed to be already in [0, 100] percent)
         actuator_msg.tool_position = std::clamp(tool_height_, 0.0, 100.0);
