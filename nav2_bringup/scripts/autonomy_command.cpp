@@ -20,8 +20,8 @@ private:
         actuator_msg.wheel_velocity = std::clamp(actuator_msg.wheel_velocity, -15.0, 15.0);
         
         // Convert angular velocity to steer position
-        actuator_msg.steer_position = -(msg->angular.z / max_steering_angle) * 100.0;
-        actuator_msg.steer_position = std::clamp(actuator_msg.steer_position, -100.0, 100.0);
+        actuator_msg.steer_position = (msg->angular.z / max_steering_angle) * 100.0;
+        actuator_msg.steer_position = std::clamp(actuator_msg.steer_position, -90.0, 90.0);
         
         // Publish the message
         publisher_->publish(actuator_msg);
