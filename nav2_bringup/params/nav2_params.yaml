@@ -124,8 +124,8 @@ controller_server:
     # Progress checker parameters
     progress_checker:
       plugin: "nav2_controller::SimpleProgressChecker"
-      required_movement_radius: 0.1 #0.5
-      movement_time_allowance: 30.0 #10.0
+      required_movement_radius: 0.5 #0.1 #0.5
+      movement_time_allowance: 10.0 #30.0 #10.0
     # Goal checker parameters
     #precise_goal_checker:
     #  plugin: "nav2_controller::SimpleGoalChecker"
@@ -135,8 +135,8 @@ controller_server:
     general_goal_checker:
       stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.10 #0.25
-      yaw_goal_tolerance: 0.10 #0.25
+      xy_goal_tolerance: 0.15 #0.10 #0.25
+      yaw_goal_tolerance: 0.20 #0.1
     # # DWB parameters
     # FollowPath:
     #   plugin: "dwb_core::DWBLocalPlanner"
@@ -195,7 +195,7 @@ controller_server:
       vx_min: -0.5 #-0.35
       vy_max: 0.5
       wz_max: 0.5 #1.9
-      iteration_count: 1
+      iteration_count: 10 #1
       prune_distance: 1.7
       transform_tolerance: 0.1
       temperature: 0.3
@@ -207,7 +207,7 @@ controller_server:
         trajectory_step: 5
         time_step: 3
       AckermannConstraints:
-        min_turning_r: 0.2
+        min_turning_r: 0.25 #0.5 #0.66 #0.2
       critics: [
         "ConstraintCritic", "CostCritic", "GoalCritic",
         "GoalAngleCritic", "PathAlignCritic", "PathFollowCritic",
@@ -280,8 +280,8 @@ local_costmap:
       width: 3
       height: 3
       resolution: 0.05
-      #robot_radius: 0.22
-      footprint: "[[-0.4, -0.3], [-0.4, 0.3], [0.4, 0.3], [0.4, -0.3]]" #Format: "[[x1, y1], [x2, y2], [x3, y3], ...]"
+      robot_radius: 0.22
+      # footprint: "[[-0.30, -0.74], [0.3, -0.74], [0.3, 0.58], [-0.30, 0.58]]" #Format: "[[x1, y1], [x2, y2], [x3, y3], ...]"
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
@@ -320,8 +320,8 @@ global_costmap:
       global_frame: map
       robot_base_frame: base_link
       use_sim_time: True
-      #robot_radius: 0.22
-      footprint: "[[-0.4, -0.3], [-0.4, 0.3], [0.4, 0.3], [0.4, -0.3]]" #Format: "[[x1, y1], [x2, y2], [x3, y3], ...]"
+      robot_radius: 0.22
+      # footprint: "[[-0.30, -0.74], [0.3, -0.74], [0.3, 0.58], [-0.30, 0.58]]" #Format: "[[x1, y1], [x2, y2], [x3, y3], ...]"
       resolution: 0.05
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
@@ -381,11 +381,11 @@ planner_server:
     SmacPlannerHybrid:
       plugin: "nav2_smac_planner::SmacPlannerHybrid"
       tolerance: 0.5
-      allow_unknown: false #true
+      allow_unknown: true #false #true
       smooth_path: true
       motion_model_for_search: "REEDS_SHEPP"  # Suitable for Ackermann steering
       angle_quantization_bins: 72
-      minimum_turning_radius: 0.3  # Adjust based on your robot's capability
+      minimum_turning_radius: 0.25 #0.5 #0.66 #0.3, 0.2  # Adjust based on your robot's capability
       reverse_penalty: 2.0
       change_penalty: 1.5
       non_straight_penalty: 1.05
@@ -452,11 +452,11 @@ velocity_smoother:
     smoothing_frequency: 20.0
     scale_velocities: False
     feedback: "OPEN_LOOP"
-    max_velocity: [0.5, 0.0, 0.5] #[0.26, 0.0, 1.0]
-    min_velocity: [-0.5, 0.0, -0.5] #[-0.26, 0.0, -1.0]
+    max_velocity: [0.15, 0.0, 0.15] #[0.5, 0.0, 0.5] #[0.26, 0.0, 1.0]
+    min_velocity: [-0.15, 0.0, -0.15] #[-0.5, 0.0, -0.5] #[-0.26, 0.0, -1.0]
     max_accel: [0.2, 0.0, 0.2] #[2.5, 0.0, 3.2]
     max_decel: [-0.2, 0.0, -0.2] #[-2.5, 0.0, -3.2]
-    odom_topic: "odom"
+    odom_topic: "/odometry/filtered/ekf_global_node" # "odom"
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]
     velocity_timeout: 1.0
